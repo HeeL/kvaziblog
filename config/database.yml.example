@@ -1,0 +1,14 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: kvaziblog
+  password:
+
+development:
+  <<: *default
+  database: kvaziblog_development
+
+test:
+  <<: *default
+  database: kvaziblog_test
