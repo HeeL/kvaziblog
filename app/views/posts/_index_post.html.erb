@@ -1,4 +1,4 @@
-<h1><%=post.title%></h1>
+<h1><%= link_to post.title, post_path(post)%></h1>
 
 <div class="desc">
   <%=post.desc%>

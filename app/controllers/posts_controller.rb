@@ -6,4 +6,8 @@ class PostsController < ApplicationController
     @posts = Post.active.by_newest.page(params[:page]).per(PER_PAGE)
   end
 
+  def show
+    @post = Post.active.find(params[:id])
+  end
+
 end
