@@ -2,6 +2,33 @@ require 'test_helper'
 
 class PostsControllerTest < ActionController::TestCase
 
+  describe "show" do
+    it "shows active posts" do
+      post = FactoryGirl.create(:post)
+      get :show, id: post.id
+
+      assert_response :success
+      assigns(:post).id.must_equal post.id
+    end
+
+    it "doesn't show not active posts" do
+      post = FactoryGirl.create(:post, active: false)
+      get :show, id: post.id
+
+      assert_response :not_found
+    end
+
+    it "shows not active posts for admin" do
+      post = FactoryGirl.create(:post, active: false)
+      sign_in FactoryGirl.create(:admin_user)
+      get :show, id: post.id
+
+      assert_response :success
+      assigns(:post).id.must_equal post.id
+    end
+
+  end
+
   describe "index" do
 
     it "shows the latest posts first" do

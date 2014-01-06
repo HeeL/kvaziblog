@@ -7,7 +7,8 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = Post.active.find(params[:id])
+    post = current_admin_user ? Post : Post.active
+    @post = post.find(params[:id])
   end
 
 end
