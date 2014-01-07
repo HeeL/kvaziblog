@@ -10,6 +10,8 @@ gem 'jquery-rails'
 gem 'kaminari', '~> 0.14'
 
 #admin
+gem 'formtastic', github: 'justinfrench/formtastic'
+gem 'ransack', github: 'activerecord-hackery/ransack', branch: 'rails-4.1'
 gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'polyamorous', github: 'activerecord-hackery/polyamorous', branch: 'rails-4.1'
 
@@ -24,6 +26,8 @@ end
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'capistrano-rails'
   gem 'spring'
+  gem 'capistrano', '~> 3.0.1'
+  gem 'capistrano-rails', '~> 1.1.0'
+  gem 'capistrano-bundler'
 end
