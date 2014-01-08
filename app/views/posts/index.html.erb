@@ -1,5 +1,3 @@
 <%= render partial: 'posts/index_post', collection: @posts, as: :post %>
 
 <%= paginate @posts %>
-<br>
-<%= link_to 'RSS', posts_path(format: 'rss'), target: '_blank'%>
