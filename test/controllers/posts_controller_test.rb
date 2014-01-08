@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class PostsControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
 
   describe "show" do
     it "shows active posts" do
