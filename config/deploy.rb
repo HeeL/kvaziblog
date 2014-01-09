@@ -49,14 +49,6 @@ set(:symlinks, [
   {
     source: "unicorn_init.sh",
     link: "/etc/init.d/unicorn_#{fetch(:full_app_name)}"
-  },
-  {
-    source: "log_rotation",
-   link: "/etc/logrotate.d/#{fetch(:full_app_name)}"
-  },
-  {
-    source: "monit",
-    link: "/etc/monit/conf.d/#{fetch(:full_app_name)}.conf"
   }
 ])
 
