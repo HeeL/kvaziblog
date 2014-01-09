@@ -1,69 +1,52 @@
-set :application, 'kvaziblog'
-set :deploy_user, 'heel'
+require "bundler/capistrano"
 
-# setup repo details
-set :scm, :git
-set :repo_url, 'git@github.com:HeeL/kvaziblog.git'
+server "198.211.101.188", :web, :app, :db, primary: true
 
-# setup rvm
-set :rvm_ruby_string, 'ruby-2.1.0'
+set :application, "kvaziblog"
+set :user, "heel"
+set :deploy_to, "/var/www/#{application}"
+set :deploy_via, :remote_cache
+set :use_sudo, false
 
-# how many old releases do we want to keep
-set :keep_releases, 3
+set :scm, "git"
+set :repository, "git@github.com:HeeL/#{application}.git"
+set :branch, "master"
 
-# files we want symlinking to specific entries in shared.
-set :linked_files, %w{config/database.yml config/secrets.yml}
+default_run_options[:pty] = true
+ssh_options[:forward_agent] = true
 
-# dirs we want symlinking to shared
-set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
-
-# what specs should be run before deployment is allowed to
-# continue, see lib/capistrano/tasks/run_tests.cap
-set :tests, []
-
-# which config files should be copied by deploy:setup_config
-# see documentation in lib/capistrano/tasks/setup_config.cap
-# for details of operations
-set(:config_files, %w(
-  nginx.conf
-  secrets.yml
-  database.yml.example
-  unicorn.rb
-  unicorn_init.sh
-))
-
-# which config files should be made executable after copying
-# by deploy:setup_config
-set(:executable_config_files, %w(
-  unicorn_init.sh
-))
-
-# files which need to be symlinked to other parts of the
-# filesystem. For example nginx virtualhosts, log rotation
-# init scripts etc.
-set(:symlinks, [
-  {
-    source: "nginx.conf",
-    link: "/etc/nginx/sites-enabled/#{fetch(:full_app_name)}"
-  },
-  {
-    source: "unicorn_init.sh",
-    link: "/etc/init.d/unicorn_#{fetch(:full_app_name)}"
-  }
-])
-
-
-# this:
-# http://www.capistranorb.com/documentation/getting-started/flow/
-# is worth reading for a quick overview of what tasks are called
-# and when for `cap stage deploy`
+after "deploy", "deploy:cleanup" # keep only the last 5 releases
 
 namespace :deploy do
-  # make sure we're deploying what we think we're deploying
-  before :deploy, "deploy:check_revision"
-  # only allow a deploy with passing tests to deployed
-  before :deploy, "deploy:run_tests"
-  # compile assets locally then rsync
-  after 'deploy:symlink:shared', 'deploy:compile_assets_locally'
-  after :finishing, 'deploy:cleanup'
+  %w[start stop restart].each do |command|
+    desc "#{command} unicorn server"
+    task command, roles: :app, except: {no_release: true} do
+      run "/etc/init.d/unicorn_#{application} #{command}"
+    end
+  end
+
+  task :setup_config, roles: :app do
+    sudo "ln -nfs #{current_path}/config/nginx.conf /etc/nginx/sites-enabled/#{application}"
+    sudo "ln -nfs #{current_path}/config/unicorn_init.sh /etc/init.d/unicorn_#{application}"
+    run "mkdir -p #{shared_path}/config"
+    put File.read("config/database.yml.sample"), "#{shared_path}/config/database.yml"
+    puts "Now edit the config files in #{shared_path}."
+  end
+  after "deploy:setup", "deploy:setup_config"
+
+  task :symlink_config, roles: :app do
+    run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    run "ln -nfs #{shared_path}/config/secrets.yml #{release_path}/config/secrets.yml"
+  end
+  after "deploy:finalize_update", "deploy:symlink_config"
+
+  desc "Make sure local git is in sync with remote."
+  task :check_revision, roles: :web do
+    unless `git rev-parse HEAD` == `git rev-parse origin/master`
+      puts "WARNING: HEAD is not the same as origin/master"
+      puts "Run `git push` to sync changes."
+      exit
+    end
+  end
+  before "deploy", "deploy:check_revision"
 end
