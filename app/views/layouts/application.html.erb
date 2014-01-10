@@ -24,7 +24,10 @@
     <div id="page">
       <div id="title">
         <%= link_to(image_tag('rss.png'), posts_path(format: 'rss'), target: '_blank', class: 'rss-link')%>
-        <h1><%= link_to 'KvaziBlog.com', '/'%></h1>
+        <h1>
+          <%= link_to 'KvaziBlog.com', '/'%>
+          <%= link_to '*', first_post_link, class: 'first-post-link'%>
+        </h1>
         <p><%= mail_to 'parizhskiy@gmail.com', 'Me', target: '_blank' %> on <%= link_to 'GitHub', 'https://github.com/heel', target: '_blank'%> / <%= link_to 'LinkedIn', 'http://www.linkedin.com/in/parizhskiy', target: '_blank'%></p>
       </div>
       <div id="body">
