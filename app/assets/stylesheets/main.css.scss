@@ -8,7 +8,7 @@ body {background-image: url(image-path('body-bg.png')); font-family: 'MyriadProL
 
 /* Text styles */
 p {text-align: justify; font-size: 16px; line-height: 23px;}
-h1 {font-family: 'MyriadProBoldSemiCondensed'; font-weight: normal; font-size: 35px; margin: 0; letter-spacing: -2px;}
+h1 {font-family: 'MyriadProBoldSemiCondensed'; font-weight: normal; font-size: 35px; margin: 0; letter-spacing: -2px; color: #5e6469}
 h2 {font-family: 'MyriadProBoldSemiCondensed'; font-weight: normal; font-size: 30px; margin: 0;}
 h3 {font-family: 'MyriadProBoldSemiCondensed'; font-weight: normal; font-size: 25px; margin: 0;}
 h4 {font-family: 'MyriadProBoldSemiCondensed'; font-weight: normal; font-size: 20px; margin: 0;}
@@ -16,8 +16,8 @@ h5 {font-family: 'MyriadProBoldSemiCondensed'; font-weight: normal; font-size: 2
 h6 {font-family: 'MyriadProBoldSemiCondensed'; font-weight: normal; font-size: 20px; margin: 0; text-transform: uppercase; letter-spacing: 3px;}
 b {font-family: 'MyriadProBold'; font-weight: normal;}
 i {font-family: 'MyriadProLtSCnIt'; font-style: normal;}
-a {color: #343D85; text-decoration: none;}
-a:hover {color: black; text-decoration: underline;}
+a {color: #38678b;}
+a:hover {color: black; text-decoration: none;}
 a:active {text-decoration: none;}
 
 /* Table styles */
@@ -89,5 +89,20 @@ li {margin-bottom: 5px;}
   background-image: url(image-path('content-bg.png'));
   h1 {
     margin: 0;
+  }
+  p.desc {
+    margin-top: 0;
+  }
+  img.left-side {
+    float: left;
+    margin: 5px 5px 0 0;
+  }
+  img.right-side {
+    float: right;
+    margin: 5px 0 0 10px;
+  }
+  img.right-side, img.left-side {
+    padding: 6px;
+    border: 1px solid #ccc;
   }
 }
